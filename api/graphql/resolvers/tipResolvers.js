@@ -33,8 +33,6 @@ const createTip = async (_, { input }, context) => {
     });
 
     const res = await newTip.save();
-    console.log('res tip created:', res);
-    console.log('res._doc', res._doc);
 
     return {
        id: res.id,
@@ -73,7 +71,6 @@ const tipResolvers = {
         },
         getTips: async (_, { amount }) => {
             try {
-                console.log('amount', amount)
                 return await Tip.find().sort({createdAt: -1}).limit(amount);
             } catch (error) {
                 throw new Error('Error fetching tips');
