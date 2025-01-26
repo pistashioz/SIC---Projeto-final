@@ -82,12 +82,16 @@ const logout = async (_, __, context) => {
 
 const userResolvers = {
     Query: {
-        /*
-        getUserDetails: async (_, __, context) => {
-            const user = authMiddleware(context)
+        getUserDetails: async (_, { token }, context) => {
+            const userFound = authMiddleware(context)
+            console.log('userFound', userFound)
             // se o utilizador está autenticado e autorizado, retorna user details
+            if (!userFound) {
+                throw new Error('Not authenticated');
+            }
+            const user = await User.findById(userFound.id).select('-password');
             return user
-        },*/
+        },
        getUsers: async() => {
             try {
                 return await User.find().select('-password');

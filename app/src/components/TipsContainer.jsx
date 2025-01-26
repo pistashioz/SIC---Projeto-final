@@ -7,8 +7,6 @@ function TipsContainer() {
         variables: { amount: 10 }
     })
 
-    console.log('data:', data)
-
     if (loading) {
         return <p>loading tips</p>
     }

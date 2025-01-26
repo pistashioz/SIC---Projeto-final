@@ -12,6 +12,11 @@ const userSchema = gql`
         events: [Event]
     }
 
+    type UserToken {
+        id: ID!
+        username: String!
+    }
+
     input SignUpInput  {
         username: String!
         name: String!
@@ -42,6 +47,7 @@ const userSchema = gql`
     type Query {
         getUser(id: ID!): User
         getUsers(amount: Int): [User]
+        getUserDetails(token: String!): User
     }
 `;
 export default userSchema

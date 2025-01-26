@@ -1,7 +1,7 @@
 import React from "react";
 import { useMutation } from "@apollo/client";
 import { LOGIN_USER } from "../graphql/queries";
-
+import { useNavigate } from "react-router-dom";
 const LoginForm = () => {
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
@@ -9,8 +9,11 @@ const LoginForm = () => {
         onCompleted: (data) => {
             localStorage.setItem('token', data.login.token)
             alert('logged in successfully')
+            navigate('/home')
         }
     })
+
+    const navigate = useNavigate()
 
     const handleSubmit = (e) => {
         e.preventDefault();
