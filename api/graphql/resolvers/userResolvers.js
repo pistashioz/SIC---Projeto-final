@@ -65,7 +65,7 @@ const login = async (_, {username, password}) => {
 }
 
 const updateUserProfile = async (_, { id, userInput: {username, name, email, password} }, context) => {
-    const user = authMiddleware(context)
+    authMiddleware(context)
     
     const updatedFields = { username, name, email };
 
@@ -84,7 +84,6 @@ const userResolvers = {
     Query: {
         getUserDetails: async (_, { token }, context) => {
             const userFound = authMiddleware(context)
-            console.log('userFound', userFound)
             // se o utilizador está autenticado e autorizado, retorna user details
             if (!userFound) {
                 throw new Error('Not authenticated');

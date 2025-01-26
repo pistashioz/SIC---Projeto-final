@@ -61,3 +61,18 @@ export const GET_AUTHENTICATED_USER = gql`
         }
     }
 `   
+export const ADD_EVENT = gql`
+    mutation AddEvent {
+        addEvent {
+            id
+            eventType
+            eventDate
+            description
+            state
+            userId
+            repeat
+            repeatTime
+            location
+        }
+    }
+`
