@@ -66,15 +66,12 @@ const login = async (_, {username, password}) => {
 
 const updateUserProfile = async (_, { id, userInput: {username, name, email, password} }, context) => {
     const user = authMiddleware(context)
-     // se o utilizador está autenticado, pode atualizar o perfil
-    // console.log('user update profile', user)
     
     const updatedFields = { username, name, email };
 
     if (password) {
         updatedFields.password = await bcrypt.hash(password, 12);
     }
-    console.log('password hashed:', password)
     const wasEdited = await User.updateOne({_id: id}, updatedFields)
     return wasEdited.modifiedCount > 0;
 }

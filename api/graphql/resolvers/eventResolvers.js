@@ -36,9 +36,7 @@ const addEvent = async (_, { eventInput }, context) => {
 
     const event = new Event(newEvent);
     await event.save();
-    console.log('context pub', context.pubsub)
     pubsub.publish('EVENT_CREATED', { eventCreated: event }) 
-    console.log('pubsub inside add event:', pubsub)
     return event;
 };
 
