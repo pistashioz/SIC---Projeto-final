@@ -7,32 +7,42 @@ const eventSchema = gql`
         POSTPONE
     }
 
+    enum EventType {
+        STI_TEST
+        CONTRACEPTIVE_REFILL
+        COUNSELING_SESSION
+        WORKSHOP
+        OTHER  
+    }
+
     enum RepeatOption {
         DAILY
         WEEKLY
         MONTHLY
-        NONE
+        NEVER
     }
 
 
     type Event {
         id: ID!
-        eventType: String!
+        eventType: EventType!
         eventDate: String!
         description: String
         state: StateOption!
         userId: ID!
         repeat: RepeatOption!
         repeatTime: String!
+        location: String
     }
 
     input EventInput {
-        eventType: String
+        eventType: EventType!
         eventDate: String
         description: String
         state: StateOption
         repeat: RepeatOption!
         repeatTime: String!
+        location: String
     }
 
     type Query {
@@ -47,9 +57,9 @@ const eventSchema = gql`
     }
 
     type Subscription {
-        eventCreated: Event
-        eventUpdated: Event
-        eventDeleted: ID
+        eventCreated: Event!
+        eventUpdated: Event!
+        eventDeleted: ID!
     }
 
 `;

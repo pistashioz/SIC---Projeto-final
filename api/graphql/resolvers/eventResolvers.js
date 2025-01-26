@@ -1,16 +1,15 @@
 import Event from '../../models/Event.model.js';
 import authMiddleware from '../../utils/authMiddleware.js';
-import pubsub from '../../utils/pubsub.js';
-import  SUBSCRIPTION_EVENTS  from '../subscriptions/constants.js';
+import { PubSub } from 'graphql-subscriptions';
+
+const pubsub = new PubSub();
 
 const addEvent = async (_, { eventInput }, context) => {
-    const { eventType, eventDate, description, state, repeat, repeatTime } = eventInput;
+    const { eventType, eventDate, description, state, repeat, repeatTime, location } = eventInput;
 
     const user = authMiddleware(context);
-    console.log('user:', user)
-    console.log('event date:', eventDate)
     const parsedDate = new Date(eventDate);
-    console.log('parser date:', parsedDate)
+
     if (isNaN(parsedDate.getTime())) {
         throw new Error("Invalid eventDate value");
     }
@@ -32,12 +31,14 @@ const addEvent = async (_, { eventInput }, context) => {
         repeat,
         repeatTime,
         userId: user.id,
+        location
     });
 
     const event = new Event(newEvent);
     await event.save();
-
-    pubsub.publish(SUBSCRIPTION_EVENTS.EVENT_CREATED, { eventCreated: event })
+    console.log('context pub', context.pubsub)
+    pubsub.publish('EVENT_CREATED', { eventCreated: event }) 
+    console.log('pubsub inside add event:', pubsub)
     return event;
 };
 
@@ -49,14 +50,14 @@ const deleteEvent = async (_, { id }, context) => {
     if (!deletedEvent) {
         throw new Error("Event not found");
     }
-    pubsub.publish(SUBSCRIPTION_EVENTS.EVENT_DELETED, { eventDeleted: id });
+    pubsub.publish('EVENT_DELETED', { eventDeleted: id });
     return true
 }
 
 const editEvent = async (_, { id, eventInput }, context) => {
     const user = authMiddleware(context);
 
-    const { eventType, eventDate, description, state, repeat, repeatTime } = eventInput;
+    const { eventType, eventDate, description, state, repeat, repeatTime, location } = eventInput;
 
     const parsedDate = new Date(Number(eventDate));
     if (isNaN(parsedDate.getTime())) {
@@ -80,6 +81,7 @@ const editEvent = async (_, { id, eventInput }, context) => {
         repeat,
         repeatTime,
         userId: user.id,
+        location
     };
 
     const updatedEvent = await Event.findByIdAndUpdate(id, updatedFields, { new: true });
@@ -88,7 +90,7 @@ const editEvent = async (_, { id, eventInput }, context) => {
         throw new Error("Event not found");
     }
 
-    pubsub.publish(SUBSCRIPTION_EVENTS.EVENT_UPDATED, { eventUpdated: updatedEvent });
+    pubsub.publish('EVENT_UPDATED', { eventUpdated: updatedEvent });
 
     return true
 }
@@ -108,9 +110,11 @@ const eventResolvers = {
             }
         },
 
-        getEvents: async (_, { amount }) => {
+        getEvents: async (_, { amount }, context) => {
             try {
-                return await Event.find().sort({createdAt: -1})
+                const user = authMiddleware(context)
+                const events = await Event.find({ userId: user.id }).sort({ createdAt: -1 })
+                return events
             } catch (error) {
                 throw new Error('Error getting events')
             }
@@ -123,13 +127,13 @@ const eventResolvers = {
     },
     Subscription: {
         eventCreated: {
-            subscribe: () => pubsub.asyncIterator(SUBSCRIPTION_EVENTS.EVENT_CREATED),
+            subscribe: () => pubsub.asyncIterableIterator('EVENT_CREATED')
         },
         eventUpdated: {
-            subscribe: () => pubsub.asyncIterator(SUBSCRIPTION_EVENTS.EVENT_UPDATED),
+            subscribe: (_, __, { pubsub }) => pubsub.asyncIterableIterator('EVENT_UPDATED'),
         },
         eventDeleted: {
-            subscribe: () => pubsub.asyncIterator(SUBSCRIPTION_EVENTS.EVENT_DELETED),
+            subscribe: (_, __, { pubsub }) => pubsub.asyncIterableIterator('EVENT_DELETED'),
         },
     }
 }
