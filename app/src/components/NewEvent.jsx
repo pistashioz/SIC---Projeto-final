@@ -27,10 +27,21 @@ const NewEvent = ({isOpen, onClose}) => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
         try {
-            await addEvent({variables: {eventInput}})
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Please login first');
+            }
+            await addEvent({
+                variables: { eventInput },
+                context: {
+                    headers: {
+                        Authorization: `Bearer ${token}`, 
+                    },
+                },
+            });
             alert('event added successfully')
+            onClose()
 
             setEventInput({
                 eventType: '',

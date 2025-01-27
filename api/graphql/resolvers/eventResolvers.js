@@ -6,7 +6,6 @@ const pubsub = new PubSub();
 
 const addEvent = async (_, { eventInput }, context) => {
     const { eventType, eventDate, description, state, repeat, repeatTime, location } = eventInput;
-    console.log('eveneeee', eventType)
     const user = authMiddleware(context);
     const parsedDate = new Date(eventDate);
 

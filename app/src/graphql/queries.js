@@ -62,8 +62,8 @@ export const GET_AUTHENTICATED_USER = gql`
     }
 `   
 export const ADD_EVENT = gql`
-    mutation AddEvent {
-        addEvent {
+    mutation AddEvent($eventInput: EventInput!) {
+        addEvent(eventInput: $eventInput) {
             id
             eventType
             eventDate
