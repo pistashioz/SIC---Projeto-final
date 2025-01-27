@@ -76,3 +76,25 @@ export const ADD_EVENT = gql`
         }
     }
 `
+
+export const GET_EVENT = gql`
+    query GetEvent($getEventId: ID!) {
+        getEvent(id: $getEventId) {
+            id
+            eventType
+            eventDate
+            description
+            state
+            userId
+            repeat
+            repeatTime
+            location
+        }
+    }
+`
+
+export const UPDATE_EVENT = gql`
+    mutation EditEvent($editEventId: ID, $eventInput: EventInput) {
+        editEvent(id: $editEventId, eventInput: $eventInput)
+    }
+`

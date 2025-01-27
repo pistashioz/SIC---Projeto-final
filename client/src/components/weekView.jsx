@@ -1,10 +1,21 @@
 'use client'
 
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { format } from 'date-fns';
+import SidebarModal from './eventInfo';
 
+export default function weekView({ weekDates, eventsByDay, token })  {
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+  const [selectedEventId, setSelectedEventId] = useState(null);
 
-export default function weekView({ weekDates, eventsByDay })  {
+  const openSidebar = (eventId) => {
+    setSelectedEventId(eventId);
+    setIsSidebarOpen(true);
+  };
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
+    setSelectedEventId(null); 
+  };
 
   const eventTypeStyles = {
     STI_TEST: { bg: 'bg-red-50', border: 'border-red-600', text: 'text-red-600' },
@@ -14,8 +25,11 @@ export default function weekView({ weekDates, eventsByDay })  {
     OTHER: { bg: 'bg-gray-50', border: 'border-gray-600', text: 'text-gray-600' },
   };
 
+  
+
     const renderEvent = (event) => (
-        <div key={event.id} className={`rounded p-1.5 ${eventTypeStyles[event.eventType]?.bg || 'bg-yellow-50'} ${eventTypeStyles[event.eventType]?.border || 'border-yellow-600'} border-l-2 mb-2`}>
+      
+        <div  onClick={() => openSidebar(event.id)}  key={event.id} className={`rounded p-1.5 ${eventTypeStyles[event.eventType]?.bg || 'bg-yellow-50'} ${eventTypeStyles[event.eventType]?.border || 'border-yellow-600'} border-l-2 mb-2`}>
           <p className="text-xs font-normal text-gray-900 mb-px">
             {event.eventType}
           </p>
@@ -42,6 +56,7 @@ export default function weekView({ weekDates, eventsByDay })  {
     return (
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
           {weekDates.map(date => renderDay(date))}
+          <SidebarModal id={selectedEventId} isOpen={isSidebarOpen} closeSidebar={closeSidebar} token={token}/>
       </div>
   );
 }

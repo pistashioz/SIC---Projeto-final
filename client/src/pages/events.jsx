@@ -21,6 +21,7 @@ const getNextDay = (currentDate) => {
 
 export default function Home() {
     const [token, setToken] = useState(null);
+
     useEffect(() => {
         const storedToken = localStorage.getItem('token');
         setToken(storedToken);
@@ -43,7 +44,6 @@ export default function Home() {
         }
         setWeekDates(dates);
     }, [currentWeekStart]);
-
 
     const handleClose = () => {
         setOpen(false);
@@ -153,7 +153,7 @@ export default function Home() {
                         </button>
                     </div> 
                 </div>
-                <WeekView weekDates={weekDates} eventsByDay={memoizedEventsByDay} />
+                <WeekView weekDates={weekDates} eventsByDay={memoizedEventsByDay} token={token}/>
             </section>
             <NewEvent isOpen={open} onClose={handleClose} />
         </div>
