@@ -126,3 +126,57 @@ export const REMOVE_FAVORITE_TIP = gql`
         removeFavoriteTip(id: $removeFavoriteTipId)
     }
 `
+export const CREATE_ACCOUNT = gql`
+    mutation SignUp($signUpInput: SignUpInput!) {
+        signUp(signUpInput: $signUpInput) {
+            id
+            username
+            name
+            email
+            createdAt
+            updatedAt
+            token
+            favoriteTips {
+                id
+                title
+                info
+                image
+                cloudinary_id
+                description
+                author
+                createdAt
+                updatedAt
+            }
+            events {
+                id
+                eventType
+                eventDate
+                description
+                state
+                userId
+                repeat
+                location
+            }
+        }
+    }
+`
+
+export const EVENT_CREATED_SUBSCRIPTION = gql`
+    subscription EventCreated {
+        eventCreated {
+            id
+            eventType
+            eventDate
+            description
+            state
+            userId
+            repeat
+            location
+        }
+    }
+`
+export const EVENT_DELETED_SUBSCRIPTION = gql`
+    subscription EventDeleted {
+        eventDeleted
+    }
+`

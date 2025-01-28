@@ -23,6 +23,9 @@ const useUserInfo = (token) => {
             if (data && data.getUserDetails) {
                 setUser(data.getUserDetails)
             }
+            else {
+                setUser([])
+            }
             setLoading(queryLoading)
         }, [data, queryLoading, error])
 

@@ -107,10 +107,10 @@ const eventResolvers = {
             subscribe: () => pubsub.asyncIterableIterator('EVENT_CREATED')
         },
         eventUpdated: {
-            subscribe: (_, __, { pubsub }) => pubsub.asyncIterableIterator('EVENT_UPDATED'),
+            subscribe: () => pubsub.asyncIterableIterator('EVENT_UPDATED'),
         },
         eventDeleted: {
-            subscribe: (_, __, { pubsub }) => pubsub.asyncIterableIterator('EVENT_DELETED'),
+            subscribe: () => pubsub.asyncIterableIterator('EVENT_DELETED'),
         },
     }
 }

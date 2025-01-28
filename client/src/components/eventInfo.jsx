@@ -48,7 +48,7 @@ const Sidebar = ({ isOpen, closeSidebar, id , token}) => {
                     }
                 }
             })
-            alert("Event deleted successfully!");
+            closeSidebar();
         }
         catch (err) {
             console.error("Error deleting event:", err);
@@ -68,7 +68,6 @@ const Sidebar = ({ isOpen, closeSidebar, id , token}) => {
                     }
                 }
             });
-            alert("Event updated successfully!");
             closeSidebar();
         } catch (err) {
             console.error("Error updating event:", err);

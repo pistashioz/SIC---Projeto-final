@@ -37,7 +37,7 @@ const removeFavoriteTip = async (_, { id }, context) => {
     if (wasDeleted === 0) {
         throw new Error('Tip is not in your favorites');
     }
-    return { message: 'Tip removed from favorites' };
+    return true
 }
 
 const favoritetipResolvers = {

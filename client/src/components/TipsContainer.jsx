@@ -18,9 +18,18 @@ function TipsContainer() {
         userId: user.id,
         tipId: '',
     })
-
+    
     const [addFavoriteTip] = useMutation(ADD_FAVORITE_TIP);
     const [removeFavoriteTip] = useMutation(REMOVE_FAVORITE_TIP);
+    const { loading: favLoading, error: favError, data: favData } = useQuery(GET_FAVORITE_TIPS, {
+        variables: { userId: user.id },
+        context: {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        },
+    });   
+
     const handleSubmit = async (tipId, event) => {
         event.preventDefault();
         if (!token) {
@@ -34,21 +43,17 @@ function TipsContainer() {
         };
     
         try {
-            const isFavorite = user.favoriteTips.some(fav => fav.id === tipId);
+            const favoriteTip = favData.getFavoriteTips.find(fav => fav.tipId === tipId);
     
-            if (isFavorite) {
-                console.log(user.favoriteTips);
-                const favoriteTip = user.favoriteTips.find(fav => fav.id === tipId);
-                console.log(favoriteTip);
+            if (favoriteTip) {
                 await removeFavoriteTip({
-                    variables: { removeFavoriteTipId: favoriteTip.id  },
+                    variables: { removeFavoriteTipId: favoriteTip.id },
                     context: {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
                     },
                 });
-                alert('Tip removed from favorites successfully');
             } else {
                 await addFavoriteTip({
                     variables: { input: newInput },
@@ -58,7 +63,6 @@ function TipsContainer() {
                         },
                     },
                 });
-                alert('Tip added to favorites successfully');
             }
         } catch (error) {
             console.error(error);

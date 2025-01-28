@@ -42,7 +42,6 @@ const NewEvent = ({isOpen, onClose}) => {
                     },
                 },
             });
-            alert('event added successfully')
             onClose()
 
             setEventInput({

@@ -16,7 +16,7 @@ const favoriteTipSchema = gql`
     }
     type Mutation {
         addFavoriteTip(input: FavoriteTipInput!): FavoriteTip!
-        removeFavoriteTip(id: ID!): Boolean
+        removeFavoriteTip(id: ID!): Boolean!
     }
 
 
