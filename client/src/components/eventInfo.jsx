@@ -1,19 +1,20 @@
 import { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client";
-import {  UPDATE_EVENT } from "@/graphql/queries";
+import {  UPDATE_EVENT, DELETE_EVENT } from "@/graphql/queries";
 import useEvent from "@/hooks/useEvent";
 
 const Sidebar = ({ isOpen, closeSidebar, id , token}) => {
+    console.log('id:',  id)
     const { event, loading, error } = useEvent(id);
 
     const [editEvent] = useMutation(UPDATE_EVENT); 
+    const [deleteEvent] = useMutation(DELETE_EVENT);
     const [formData, setFormData] = useState({
         eventType: "",
         eventDate: "",
         description: "",
         state: "",
         repeat: "",
-        repeatTime: "",
         location: ""
     });
 
@@ -25,7 +26,6 @@ const Sidebar = ({ isOpen, closeSidebar, id , token}) => {
                 description: event.description || "",
                 state: event.state || "",
                 repeat: event.repeat || "",
-                repeatTime: event.repeatTime || "",
                 location: event.location || ""
             });
         }
@@ -36,12 +36,30 @@ const Sidebar = ({ isOpen, closeSidebar, id , token}) => {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
+    const handleDelete = async () => {
+        try {
+            const response = await deleteEvent({
+                variables: {
+                    deleteEventId: id
+                },
+                context: {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            })
+            alert("Event deleted successfully!");
+        }
+        catch (err) {
+            console.error("Error deleting event:", err);
+        }
+    }
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             await editEvent({
                 variables: {
-                    id,
+                    editEventId: id,
                     eventInput: formData
                 },
                 context: {
@@ -59,7 +77,6 @@ const Sidebar = ({ isOpen, closeSidebar, id , token}) => {
     };
 
     if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error loading event</p>;
 
     return (
         <div
@@ -73,7 +90,7 @@ const Sidebar = ({ isOpen, closeSidebar, id , token}) => {
                 </button>
             </div>
             <form className="p-4 space-y-4" onSubmit={handleSubmit}>
-                <h2 className="text-2xl">Edit Event</h2>
+                <h2 className="text-2xl">Event</h2>
                 <div>
                     <label htmlFor="eventType" className="block text-sm font-medium text-gray-700">
                         Event Type
@@ -138,19 +155,6 @@ const Sidebar = ({ isOpen, closeSidebar, id , token}) => {
                     </select>
                 </div>
                 <div>
-                    <label htmlFor="repeatTime" className="block text-sm font-medium text-gray-700">
-                        Repeat Time
-                    </label>
-                    <input
-                        type="time"
-                        id="repeatTime"
-                        name="repeatTime"
-                        value={formData.repeatTime}
-                        onChange={handleChange}
-                        className="mt-1 block w-full p-2.5 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                    />
-                </div>
-                <div>
                     <label htmlFor="location" className="block text-sm font-medium text-gray-700">
                         Location
                     </label>
@@ -170,6 +174,11 @@ const Sidebar = ({ isOpen, closeSidebar, id , token}) => {
                     Save Changes
                 </button>
             </form>
+            <button onClick={handleDelete}
+                    className="w-full mt-4 bg-black hover:bg-black-800 text-white font-medium py-2.5 rounded-lg focus:outline-none focus:ring-4 focus:ring-black-300"
+                >
+                    Delete Event
+                </button>
         </div>
     );
 };

@@ -55,7 +55,6 @@ export const GET_AUTHENTICATED_USER = gql`
             state
             userId
             repeat
-            repeatTime
             location
             }
         }
@@ -71,7 +70,6 @@ export const ADD_EVENT = gql`
             state
             userId
             repeat
-            repeatTime
             location
         }
     }
@@ -87,7 +85,6 @@ export const GET_EVENT = gql`
             state
             userId
             repeat
-            repeatTime
             location
         }
     }
@@ -96,5 +93,36 @@ export const GET_EVENT = gql`
 export const UPDATE_EVENT = gql`
     mutation EditEvent($editEventId: ID, $eventInput: EventInput) {
         editEvent(id: $editEventId, eventInput: $eventInput)
+    }
+`
+
+export const DELETE_EVENT = gql `
+    mutation DeleteEvent($deleteEventId: ID!) {
+        deleteEvent(id: $deleteEventId)
+    }
+`
+
+export const ADD_FAVORITE_TIP = gql`
+    mutation AddFavoriteTip($input: FavoriteTipInput!) {
+        addFavoriteTip(input: $input) {
+            id
+            userId
+            tipId
+        }
+    }
+`
+export const GET_FAVORITE_TIPS = gql`
+    query GetFavoriteTips($userId: ID!) {
+        getFavoriteTips(userId: $userId) {
+            id
+            userId
+            tipId
+        }
+    }
+`
+
+export const REMOVE_FAVORITE_TIP = gql`
+    mutation RemoveFavoriteTip($removeFavoriteTipId: ID!) {
+        removeFavoriteTip(id: $removeFavoriteTipId)
     }
 `

@@ -1,8 +1,9 @@
 'use client'
 
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { format } from 'date-fns';
 import SidebarModal from './eventInfo';
+
 
 export default function weekView({ weekDates, eventsByDay, token })  {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
@@ -42,10 +43,13 @@ export default function weekView({ weekDates, eventsByDay, token })  {
     const renderDay = (date) => {
         const dayKey = format(date, 'MM/dd/yyyy');
         const eventsForDay = eventsByDay[dayKey] || [];
+
+        const sortedEvents = eventsForDay.sort((a, b) => new Date(Number(a.eventDate)) - new Date(Number(b.eventDate)));
+
         return (
             <div key={dayKey} style={{ margin: '10px', width: '190px' }}>
                 <div className='p-3.5 flex items-center justify-center text-sm font-medium  text-gray-900'>{format(date, 'EEEE, MMMM d')}</div>
-                {eventsForDay.length > 0 ? (
+                {sortedEvents.length > 0 ? (
                     eventsForDay.map(event => renderEvent(event))
                 ) : (
                     <p className='flex items-center justify-center text-sm font-small  text-gray-400'>No events for this day</p>

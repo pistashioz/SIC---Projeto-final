@@ -7,7 +7,6 @@ const eventSchema = new Schema({
     state: { type: String, enum: ['COMPLETED', 'PENDING', 'POSTPONE']},
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     repeat: { type: String, enum: ['DAILY', 'WEEKLY', 'MONTHLY', 'NEVER'], required: true},
-    repeatTime: { type: String, required: true },
     location: { type: String, required: false }
 }, {
     collection: 'event',

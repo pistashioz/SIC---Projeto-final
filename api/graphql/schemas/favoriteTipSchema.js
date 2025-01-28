@@ -4,7 +4,6 @@ const favoriteTipSchema = gql`
         id: ID!
         userId: ID!
         tipId: ID!
-        createdAt: String!
     }
 
     input FavoriteTipInput {

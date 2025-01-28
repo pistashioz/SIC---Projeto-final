@@ -99,7 +99,7 @@ export default function Home() {
     }, [currentWeekStart]);
 
     const memoizedEventsByDay = useMemo(() => eventsByDay, [eventsByDay]);
-
+    const formatMonthYear = (date) => format(date, 'MMMM yyyy');
     return (
         <div>
             <section className="relative bg-stone-50 py-24 h-screen">
@@ -119,7 +119,7 @@ export default function Home() {
                             />
                             </svg>
                             <h6 className="text-xl leading-8 font-semibold text-gray-900">
-                            Today, January 2024
+                            {formatMonthYear(today)}
                             </h6>
                         </div>
                         <div className="flex items-center gap-px rounded-lg bg-gray-100 p-1">

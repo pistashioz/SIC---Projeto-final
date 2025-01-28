@@ -23,7 +23,6 @@ const addFavoriteTip = async (_, { input }, context) => {
             id: res._id, 
             userId: res.userId,
             tipId: res.tipId,
-            createdAt: res.createdAt
         };
     } catch (error) {
         console.error('Error saving favorite tip:', error);

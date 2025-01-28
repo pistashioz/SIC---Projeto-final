@@ -31,7 +31,6 @@ const eventSchema = gql`
         state: StateOption!
         userId: ID!
         repeat: RepeatOption!
-        repeatTime: String!
         location: String
     }
 
@@ -41,7 +40,6 @@ const eventSchema = gql`
         description: String
         state: StateOption
         repeat: RepeatOption!
-        repeatTime: String!
         location: String
     }
 

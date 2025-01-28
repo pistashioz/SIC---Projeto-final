@@ -5,7 +5,7 @@ import { PubSub } from 'graphql-subscriptions';
 const pubsub = new PubSub();
 
 const addEvent = async (_, { eventInput }, context) => {
-    const { eventType, eventDate, description, state, repeat, repeatTime, location } = eventInput;
+    const { eventType, eventDate, description, state, repeat, location } = eventInput;
     const user = authMiddleware(context);
     const parsedDate = new Date(eventDate);
 
@@ -13,22 +13,12 @@ const addEvent = async (_, { eventInput }, context) => {
         throw new Error("Invalid eventDate value");
     }
 
-    const [hours, minutes] = repeatTime.split(":").map((v) => parseInt(v, 10));
-    if (isNaN(hours) || isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
-        throw new Error("Invalid repeatTime value");
-    }
-
-    parsedDate.setHours(hours);
-    parsedDate.setMinutes(minutes);
-    parsedDate.setSeconds(0);
-
     const newEvent = new Event({
         eventType,
         eventDate: parsedDate.toISOString(),
         description,
         state,
         repeat,
-        repeatTime,
         userId: user.id,
         location
     });
@@ -54,21 +44,12 @@ const deleteEvent = async (_, { id }, context) => {
 const editEvent = async (_, { id, eventInput }, context) => {
     const user = authMiddleware(context);
 
-    const { eventType, eventDate, description, state, repeat, repeatTime, location } = eventInput;
+    const { eventType, eventDate, description, state, repeat, location } = eventInput;
 
-    const parsedDate = new Date(Number(eventDate));
+    const parsedDate = new Date(eventDate);
     if (isNaN(parsedDate.getTime())) {
         throw new Error("Invalid eventDate value");
     }
-
-    const [hours, minutes] = repeatTime.split(":").map((v) => parseInt(v, 10));
-    if (isNaN(hours) || isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
-        throw new Error("Invalid repeatTime value");
-    }
-
-    parsedDate.setHours(hours);
-    parsedDate.setMinutes(minutes);
-    parsedDate.setSeconds(0);
 
     const updatedFields = {
         eventType,
@@ -76,7 +57,6 @@ const editEvent = async (_, { id, eventInput }, context) => {
         description,
         state,
         repeat,
-        repeatTime,
         userId: user.id,
         location
     };
