@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
@@ -6,25 +6,44 @@ import SidebarModal from './eventInfo';
 import { EVENT_CREATED_SUBSCRIPTION } from '@/graphql/queries';
 import { useSubscription } from '@apollo/client';
 
-export default function weekView({ weekDates, eventsByDay, token })  {
+export default function weekView({ weekDates, eventsByDay, token }) {
   const { data } = useSubscription(EVENT_CREATED_SUBSCRIPTION);
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const [selectedEventId, setSelectedEventId] = useState(null);
-  console.log('data:', data);
+  const [localEventsByDay, setLocalEventsByDay] = useState(eventsByDay);
+
   useEffect(() => {
-    if (data) {
-      console.log('new event:', data);
-      const NewEvent = data.eventCreated;
-      
+    console.log('Local Events Updated:', localEventsByDay);
+  }, [localEventsByDay]);
+
+
+  useEffect(() => {
+    if (data?.eventCreated) {
+      console.log('New Event:', data.eventCreated);
+      const newEvent = data.eventCreated;
+      const dayKey = format(new Date(Number(newEvent.eventDate)), 'MM/dd/yyyy');
+      console.log('Day Key:', dayKey);
+  
+      setLocalEventsByDay((prev) => {
+        const updatedEvents = {
+          ...prev,
+          [dayKey]: [...(prev[dayKey] || []), newEvent],
+        };
+        console.log('Updated Events:', updatedEvents); // Log the updated events here
+        return updatedEvents;
+      });
     }
   }, [data]);
+  
+
   const openSidebar = (eventId) => {
     setSelectedEventId(eventId);
     setIsSidebarOpen(true);
   };
+
   const closeSidebar = () => {
     setIsSidebarOpen(false);
-    setSelectedEventId(null); 
+    setSelectedEventId(null);
   };
 
   const eventTypeStyles = {
@@ -35,41 +54,58 @@ export default function weekView({ weekDates, eventsByDay, token })  {
     OTHER: { bg: 'bg-gray-50', border: 'border-gray-600', text: 'text-gray-600' },
   };
 
-  
+  const renderEvent = (event) => (
+    <div
+      onClick={() => openSidebar(event.id)}
+      key={event.id}
+      className={`rounded p-1.5 ${
+        eventTypeStyles[event.eventType]?.bg || 'bg-yellow-50'
+      } ${eventTypeStyles[event.eventType]?.border || 'border-yellow-600'} border-l-2 mb-2`}
+    >
+      <p className="text-xs font-normal text-gray-900 mb-px">{event.eventType}</p>
+      <p
+        className={`text-xs font-semibold ${
+          eventTypeStyles[event.eventType]?.text || 'text-yellow-600'
+        }`}
+      >
+        {format(new Date(Number(event.eventDate)), 'HH:mm')}
+      </p>
+    </div>
+  );
 
-    const renderEvent = (event) => (
-      
-        <div  onClick={() => openSidebar(event.id)}  key={event.id} className={`rounded p-1.5 ${eventTypeStyles[event.eventType]?.bg || 'bg-yellow-50'} ${eventTypeStyles[event.eventType]?.border || 'border-yellow-600'} border-l-2 mb-2`}>
-          <p className="text-xs font-normal text-gray-900 mb-px">
-            {event.eventType}
-          </p>
-          <p className={`text-xs font-semibold ${eventTypeStyles[event.eventType]?.text || 'text-yellow-600'}`}>
-            {format(new Date(Number(event.eventDate)), 'HH:mm')}
-          </p>
-      </div>
+  const renderDay = (date) => {
+    const dayKey = format(date, 'MM/dd/yyyy');
+    const eventsForDay = localEventsByDay[dayKey] || [];
+
+    const sortedEvents = [...eventsForDay].sort(
+      (a, b) => new Date(Number(a.eventDate)) - new Date(Number(b.eventDate))
     );
 
-    const renderDay = (date) => {
-        const dayKey = format(date, 'MM/dd/yyyy');
-        const eventsForDay = eventsByDay[dayKey] || [];
-
-        const sortedEvents = eventsForDay.sort((a, b) => new Date(Number(a.eventDate)) - new Date(Number(b.eventDate)));
-
-        return (
-            <div key={dayKey} style={{ margin: '10px', width: '190px' }}>
-                <div className='p-3.5 flex items-center justify-center text-sm font-medium  text-gray-900'>{format(date, 'EEEE, MMMM d')}</div>
-                {sortedEvents.length > 0 ? (
-                    eventsForDay.map(event => renderEvent(event))
-                ) : (
-                    <p className='flex items-center justify-center text-sm font-small  text-gray-400'>No events for this day</p>
-                )}
-            </div>
-        );
-    }
     return (
-      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-          {weekDates.map(date => renderDay(date))}
-          <SidebarModal id={selectedEventId} isOpen={isSidebarOpen} closeSidebar={closeSidebar} token={token}/>
+      <div key={dayKey} style={{ margin: '10px', width: '190px' }}>
+        <div className="p-3.5 flex items-center justify-center text-sm font-medium  text-gray-900">
+          {format(date, 'EEEE, MMMM d')}
+        </div>
+        {sortedEvents.length > 0 ? (
+          sortedEvents.map((event) => renderEvent(event))
+        ) : (
+          <p className="flex items-center justify-center text-sm font-small  text-gray-400">
+            No events for this day
+          </p>
+        )}
       </div>
+    );
+  };
+
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+      {weekDates.map((date) => renderDay(date))}
+      <SidebarModal
+        id={selectedEventId}
+        isOpen={isSidebarOpen}
+        closeSidebar={closeSidebar}
+        token={token}
+      />
+    </div>
   );
 }

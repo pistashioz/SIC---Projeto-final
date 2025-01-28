@@ -180,3 +180,17 @@ export const EVENT_DELETED_SUBSCRIPTION = gql`
         eventDeleted
     }
 `
+export const ADD_FAVORITE_TIP_SUBSCRIPTION = gql`
+    subscription FavoriteTipAdded {
+        favoriteTipAdded {
+            id
+            userId
+            tipId
+        }
+    }
+`
+export const REMOVE_FAVORITE_TIP_SUBSCRIPTION = gql`
+    subscription FavoriteTipRemoved {
+        favoriteTipRemoved
+    }
+`

@@ -19,6 +19,11 @@ const favoriteTipSchema = gql`
         removeFavoriteTip(id: ID!): Boolean!
     }
 
+    type Subscription {
+        favoriteTipAdded: FavoriteTip!
+        favoriteTipRemoved: ID!
+    }
+
 
 `
 

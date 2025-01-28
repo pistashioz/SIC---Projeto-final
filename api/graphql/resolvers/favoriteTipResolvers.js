@@ -1,5 +1,8 @@
 import FavoriteTip from '../../models/FavoriteTip.model.js';
 import authMiddleware from '../../utils/authMiddleware.js';
+import { PubSub } from 'graphql-subscriptions';
+
+const pubsub = new PubSub();
 
 const addFavoriteTip = async (_, { input }, context) => {
     const { userId, tipId } = input
@@ -18,7 +21,7 @@ const addFavoriteTip = async (_, { input }, context) => {
 
     try {
         const res = await newFavoriteTip.save();
-   
+        pubsub.publish('FAVORITE_TIP_ADDED', { favoriteTipAdded: res });
         return {
             id: res._id, 
             userId: res.userId,
@@ -37,6 +40,7 @@ const removeFavoriteTip = async (_, { id }, context) => {
     if (wasDeleted === 0) {
         throw new Error('Tip is not in your favorites');
     }
+    pubsub.publish('FAVORITE_TIP_REMOVED', { favoriteTipRemoved: id });
     return true
 }
 
@@ -51,6 +55,14 @@ const favoritetipResolvers = {
         addFavoriteTip,
         removeFavoriteTip
 
+    },
+    Subscription: {
+        favoriteTipAdded: {
+            subscribe: () => pubsub.asyncIterableIterator('FAVORITE_TIP_ADDED')
+        },
+        favoriteTipRemoved: {
+            subscribe: () => pubsub.asyncIterableIterator('FAVORITE_TIP_REMOVED')
+        }
     }
 }
 export default favoritetipResolvers
