@@ -25,6 +25,11 @@ const LoginForm = () => {
             }
         })
     }
+    const handleClick = (e) => {
+        e.preventDefault()
+        router.push('/register')
+      }
+     
 
     return (
         <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-50 to-white">
@@ -86,7 +91,7 @@ const LoginForm = () => {
                     </button>
                     <p className="text-sm font-light text-center text-gray-500">
                         Don’t have an account yet? 
-                        <a href="#" className="font-medium text-primary-600 hover:underline">
+                        <a onClick={handleClick} className="font-medium text-primary-600 hover:underline">
                             Sign up
                         </a>
                     </p>
