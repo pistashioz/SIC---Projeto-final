@@ -30,6 +30,8 @@ function TipsContainer() {
         },
     });   
 
+    console.log('favData:', favData);
+
     const handleSubmit = async (tipId, event) => {
         event.preventDefault();
         if (!token) {
@@ -85,8 +87,10 @@ function TipsContainer() {
     }
 
     const filteredTips = showFavorites
-        ? data.getTips.filter((tip) => tip.isFavorite)
-        : data.getTips;
+    ? data.getTips.filter((tip) =>
+        favData?.getFavoriteTips?.some(fav => fav.tipId === tip.id)
+      )
+    : data.getTips;
 
     return (
         <div className="container mx-auto p-6">

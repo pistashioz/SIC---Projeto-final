@@ -4,7 +4,6 @@ import {  UPDATE_EVENT, DELETE_EVENT } from "@/graphql/queries";
 import useEvent from "@/hooks/useEvent";
 
 const Sidebar = ({ isOpen, closeSidebar, id , token}) => {
-    console.log('id:',  id)
     const { event, loading, error } = useEvent(id);
 
     const [editEvent] = useMutation(UPDATE_EVENT); 

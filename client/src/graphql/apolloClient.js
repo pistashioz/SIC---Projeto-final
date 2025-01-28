@@ -10,15 +10,14 @@ const httpLink = new HttpLink({
 const wsLink = new GraphQLWsLink(
   createClient({
     url: 'ws://localhost:4000/graphql',
-    on: {
-        connected: () => console.log('connected'),
-    }
+    onConnected: () => console.log('Connected to ws'),
   })
 );
 
 const splitLink = split(
   ({ query }) => {
     const definition = getMainDefinition(query);
+    console.log('Operation:', definition.operation);
     return (
       definition.kind === 'OperationDefinition' &&
       definition.operation === 'subscription'
@@ -28,9 +27,9 @@ const splitLink = split(
   httpLink
 );
 
-const client = new ApolloClient({
+const apolloClient = new ApolloClient({
   link: splitLink,
   cache: new InMemoryCache(),
 });
 
-export default client;
+export default apolloClient;
