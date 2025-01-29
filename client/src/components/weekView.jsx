@@ -7,7 +7,8 @@ import { EVENT_CREATED_SUBSCRIPTION } from '@/graphql/queries';
 import { useSubscription } from '@apollo/client';
 
 export default function weekView({ weekDates, eventsByDay, token }) {
-  const { data } = useSubscription(EVENT_CREATED_SUBSCRIPTION);
+  const { data: createdData } = useSubscription(EVENT_CREATED_SUBSCRIPTION);
+  console.log('deleted data:', deletedData)
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const [selectedEventId, setSelectedEventId] = useState(null);
   const [localEventsByDay, setLocalEventsByDay] = useState(eventsByDay);
@@ -18,23 +19,21 @@ export default function weekView({ weekDates, eventsByDay, token }) {
 
 
   useEffect(() => {
-    if (data?.eventCreated) {
-      console.log('New Event:', data.eventCreated);
-      const newEvent = data.eventCreated;
+    if (createdData?.eventCreated) {
+      console.log('New Event:', createdData.eventCreated);
+      const newEvent = createdData.eventCreated;
       const dayKey = format(new Date(Number(newEvent.eventDate)), 'MM/dd/yyyy');
-      console.log('Day Key:', dayKey);
-  
+
       setLocalEventsByDay((prev) => {
         const updatedEvents = {
           ...prev,
           [dayKey]: [...(prev[dayKey] || []), newEvent],
         };
-        console.log('Updated Events:', updatedEvents); // Log the updated events here
+        console.log('Updated Events:', updatedEvents);
         return updatedEvents;
       });
     }
-  }, [data]);
-  
+  }, [createdData]);
 
   const openSidebar = (eventId) => {
     setSelectedEventId(eventId);

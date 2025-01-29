@@ -85,6 +85,7 @@ export default function Home() {
     }, [weekDates, user.events]);
 
     useEffect(() => {
+        console.log("User events on load:", user.events);
         if (user.events && weekDates.length > 0) {
             groupEventsByDay();
         }
