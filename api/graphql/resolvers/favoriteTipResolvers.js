@@ -34,15 +34,17 @@ const addFavoriteTip = async (_, { input }, context) => {
 }
 
 
-const removeFavoriteTip = async (_, { id }, context) => {
-    authMiddleware(context)
-    const wasDeleted = (await FavoriteTip.deleteOne({_id: id})).deletedCount;
+const removeFavoriteTip = async (_, { tipId }, context) => {
+    authMiddleware(context);
+    const wasDeleted = (await FavoriteTip.deleteOne({ tipId: tipId })).deletedCount;
+
     if (wasDeleted === 0) {
         throw new Error('Tip is not in your favorites');
     }
-    pubsub.publish('FAVORITE_TIP_REMOVED', { favoriteTipRemoved: id });
-    return true
-}
+
+    pubsub.publish('FAVORITE_TIP_REMOVED', { favoriteTipRemoved: tipId });
+    return true;
+};
 
 const favoritetipResolvers = {
     Query: {

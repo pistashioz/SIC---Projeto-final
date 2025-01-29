@@ -54,9 +54,10 @@ function TipsContainer() {
         }
         try {
             await addFavoriteTip({
-                variables: { input: { userId: user.id, tipId } },
+                variables: { input: { userId: user.id, tipId: tipId } },
                 context: { headers: { Authorization: `Bearer ${token}` } }
             });
+            console.log('liked tip:', tipId);
         } catch (error) {
             console.error("Error adding favorite:", error);
         }
@@ -66,7 +67,7 @@ function TipsContainer() {
         event.preventDefault();
         try {
             await removeFavoriteTip({
-                variables: { removeFavoriteTipId: tipId },
+                variables: { tipId: tipId },
                 context: { headers: { Authorization: `Bearer ${token}` } }
             });
         } catch (error) {

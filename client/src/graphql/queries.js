@@ -122,8 +122,8 @@ export const GET_FAVORITE_TIPS = gql`
 `
 
 export const REMOVE_FAVORITE_TIP = gql`
-    mutation RemoveFavoriteTip($removeFavoriteTipId: ID!) {
-        removeFavoriteTip(id: $removeFavoriteTipId)
+    mutation RemoveFavoriteTip($tipId: ID!) {
+        removeFavoriteTip(tipId: $tipId)
     }
 `
 export const CREATE_ACCOUNT = gql`
