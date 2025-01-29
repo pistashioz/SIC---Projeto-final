@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { useQuery, useMutation, useSubscription} from "@apollo/client";
-import { GET_TIPS, ADD_FAVORITE_TIP, GET_FAVORITE_TIPS, REMOVE_FAVORITE_TIP, ADD_FAVORITE_TIP_SUBSCRIPTION, REMOVE_FAVORITE_TIP_SUBSCRIPTION} from "../graphql/queries";
-import useUserInfo from "../hooks/useUserInfo";
+import { GET_TIPS, ADD_FAVORITE_TIP, GET_FAVORITE_TIPS, REMOVE_FAVORITE_TIP, ADD_FAVORITE_TIP_SUBSCRIPTION, REMOVE_FAVORITE_TIP_SUBSCRIPTION} from "@/graphql/queries";
+import useUserInfo from "@/hooks/useUserInfo";
 
 function TipsContainer() {
     const [token, setToken] = useState(null);

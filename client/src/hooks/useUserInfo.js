@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react' 
 import { useQuery } from '@apollo/client'
-import { GET_AUTHENTICATED_USER } from '../graphql/queries'
+import { GET_AUTHENTICATED_USER } from '@/graphql/queries'
 
 const useUserInfo = (token) => {
         const [user, setUser] = useState([])

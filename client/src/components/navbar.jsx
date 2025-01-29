@@ -1,7 +1,6 @@
 'use client'
 import React from 'react'
 import { useRouter } from 'next/navigation'
-import useUserInfo from '@/hooks/useUserInfo'
 export default function Navbar() {
     const router = useRouter()
 

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useQuery } from '@apollo/client'
-import { GET_EVENT } from '../graphql/queries'
+import { GET_EVENT } from '@/graphql/queries'
 
 const useEvent = (id) => {
     const [event, setEvent] = useState([])

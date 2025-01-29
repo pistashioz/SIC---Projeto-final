@@ -1,8 +1,8 @@
-import "../styles/globals.css";
+import "@/styles/globals.css";
 import React from 'react';
 import { ApolloProvider } from '@apollo/client';
-import client from '../graphql/apolloClient'
-import Navbar from '../components/Navbar';
+import client from '@/graphql/apolloClient'
+import Navbar from '@/components/navbar';
 import { useRouter } from 'next/router';
 
 export default function MyApp({ Component, pageProps }) {

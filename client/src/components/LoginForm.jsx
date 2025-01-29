@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useMutation } from "@apollo/client";
-import { LOGIN_USER } from "../graphql/queries";
+import { LOGIN_USER } from "@/graphql/queries";
 import { useRouter } from 'next/router'
 
 const LoginForm = () => {

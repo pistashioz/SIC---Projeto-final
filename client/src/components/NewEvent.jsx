@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from "react";
-import { ADD_EVENT } from "../graphql/queries";
+import { ADD_EVENT } from "@/graphql/queries";
 import { useMutation } from "@apollo/client";
 
 const NewEvent = ({isOpen, onClose}) => {

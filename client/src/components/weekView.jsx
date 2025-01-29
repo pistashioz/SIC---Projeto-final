@@ -2,13 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
-import SidebarModal from './eventInfo';
+import SidebarModal from '@/components/eventInfo';
 import { EVENT_CREATED_SUBSCRIPTION } from '@/graphql/queries';
 import { useSubscription } from '@apollo/client';
 
 export default function weekView({ weekDates, eventsByDay, token }) {
   const { data: createdData } = useSubscription(EVENT_CREATED_SUBSCRIPTION);
-  console.log('deleted data:', deletedData)
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const [selectedEventId, setSelectedEventId] = useState(null);
   const [localEventsByDay, setLocalEventsByDay] = useState(eventsByDay);

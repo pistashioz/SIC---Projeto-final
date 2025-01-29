@@ -1,9 +1,9 @@
 'use client'
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import useUserInfo from '../hooks/useUserInfo';
-import WeekView from '../components/WeekView';
+import useUserInfo from '@/hooks/useUserInfo';
+import WeekView from '@/components/weekView';
 import { addWeeks, subWeeks, startOfWeek, format } from 'date-fns';
-import NewEvent from '../components/NewEvent'
+import NewEvent from '@/components/NewEvent'
 
 const formatDate = (date) => {
     if (date instanceof Date && !isNaN(date)) {
